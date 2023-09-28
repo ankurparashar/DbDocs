@@ -1,0 +1,30 @@
+version: '3'
+services:
+  # dbdocs container
+  dbdocs:
+    container_name: my-dbdocs
+    image: MYAWS.dkr.ecr.us-west-2.amazonaws.com/my-dbdocs:latest
+    volumes: 
+      - ./sample.dbml:/app/sample.dbml
+    ports:
+      - "8080:8080" # Map the container port to host port (customize as needed)
+    environment:
+      - DBDOCS_DB_CONNECTION_STRING=postgres://your_db_user:your_db_password@db:5432/your_db_name
+      - DBDOCS_DB_TYPE=postgres
+      - DBDOCS_API_PATH=/dbdocs
+      - DBDOCS_PORT=8080 # Customize the port for dbdocs
+      - DBDOCS_USERNAME=your_dbdocs_username
+      - DBDOCS_PASSWORD=your_dbdocs_password
+      - DBDOCS_TOKEN=dbdocs_token
+    depends_on:
+      - db
+
+  # Database container (if you're using PostgreSQL)
+  db:
+    image: postgres:13 # Use the appropriate PostgreSQL version
+    environment:
+      POSTGRES_USER: your_db_user
+      POSTGRES_PASSWORD: your_db_password
+      POSTGRES_DB: your_db_name
+    ports:
+      - "5432:5432" # Adjust the port as needed
